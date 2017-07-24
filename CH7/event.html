@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .div{
+      width: 500px;
+      height: 300px;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+<div class="div"></div>
+<script src="jquery.min.js"></script>
+<script>
+  ;(function ($,window,document,undefined) {
+    var Move = function (el,options) {
+      this.$el = el; // 绑定元素
+      this.mousedown = false;
+      this.x1 = 0;
+      this.changeX1 = 0;
+      this.init();
+      this.onLeft = options.onLeft;
+      this.onRight = options.onRight;
+    };
+    Move.prototype = {
+      constuctor: Move,
+      init: function () {
+        this.bind();
+      },
+      bind: function () {
+        var me = this;
+        me.$el.on('mousedown',function () {
+          me.mousedown = true;
+          me.x1 = 0;
+          me.changeX1 = 0;
+        }).on('mouseup',function () {
+          me.mousedown = false;
+        }).on('mouseout',function () {
+          me.mousedown = false;
+        }).on('mousemove',function (e) {
+          if(!me.mousedown) {
+            return;
+          }
+          if(me.x1 === 0) {
+            me.x1 = parseInt(e.clientX);
+          }
+          var willChange = parseInt((e.clientX - me.x1) / 30);   // 要改变
+
+          if(willChange < me.changeX1) {  // 如果 要改变的 < 已改变的, 则向左转
+//            console.log('向左转');
+            me.changeX1 = willChange;
+            me.onLeft();
+
+          } else if(willChange > me.changeX1) {   // 如果 要改变的 > 已改变的, 则向右转
+//            console.log('向右转');
+            me.changeX1 = willChange;
+            me.onRight();
+          }
+
+        });
+      }
+    };
+
+    $.fn.Move = function(options) {
+      var noop = function () {};
+      var defaultOptions = {
+        onLeft: noop,
+        onRight: noop
+      };
+      options = $.extend({},defaultOptions,options);
+      return this.each(function() {
+        new Move($(this),options);
+      });
+    }
+
+  })(jQuery,window,document);
+  $('.div').Move({
+    onLeft: function () {
+      console.log('move left');
+    },
+    onRight: function () {
+      console.log('move right');
+    }
+  });
+</script>
+</body>
+</html>
