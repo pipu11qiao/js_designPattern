@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        div{
+            margin: 20px;;
+        }
+        .box{
+            width: 100%;
+            position: relative;
+        }
+        .list{
+            position: absolute;
+            top:6px;
+            background-color: aqua;
+            display: none;
+        }
+        .list.active{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <input type="text" placeholder="请填写姓名"/>
+</div>
+<div class="box">
+    <input type="text"  class="gender" placeholder="请填写性别" readonly/>
+    <ul class="list">
+        <li>男</li>
+        <li>女</li>
+    </ul>
+</div>
+<script src="obj2.js"></script>
+<script>
+    var status;
+    var inputEl = document.getElementsByClassName('gender')[0];
+    var ulEl = document.getElementsByClassName('list')[0];
+    inputEl.onfocus = function() {
+        //this.status = 'active';
+        status = true;
+        ulEl.className = 'list active';
+    };`
+    document.onkeydown = function(e) {
+       console.log(e.keyCode);
+        var keyCode = e.keyCode;
+        if(keyCode == 40 && status) {
+
+        }
+    }
+
+</script>
+</body>
+</html>

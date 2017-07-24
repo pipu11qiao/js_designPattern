@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta charset="utf-8"/>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        ul,li{
+            list-style: none;
+        }
+        .outerBox{
+            position: relative;
+            margin: 200px auto;
+            width: 400px;
+            height: 300px;
+            background-color: #eee;
+            overflow: hidden;
+        }
+        .imgList{
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 2000px;
+            height: 300px;
+            list-style: none;
+        }
+        .item{
+            width: 400px;
+            height: 300px;
+            float: left;
+            list-style: none;
+        }
+        .item>img{
+            width: 100%;
+            height: 100%;
+        }
+        .btnList{
+            position: absolute;
+            bottom: 10px;
+            right: 10px;;
+        }
+        .btnList>li{
+            float: left;
+            margin: 0 5px;
+            width: 40px;
+            height: 40px;
+            color: white;
+            background-color: #999;
+            border-radius: 50% 50%;
+            text-align: center;
+            line-height: 40px;
+        }
+        .btnList>li.active{
+            background-color: #f11;
+        }
+    </style>
+</head>
+<body>
+<div class="outerBox">
+    <ul class="imgList">
+        <li class="item">
+            <img src="img/1.jpg" />
+        </li>
+        <li class="item">
+            <img src="img/2.jpg" />
+        </li>
+    </ul>
+    <ul class="btnList">
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+    </ul>
+</div>
+<script src="jquery.min.js"></script>
+<script src="Prototype.js"></script>
+<script>
+    var changeImage = function() {
+        var x = 0;
+        var t = setInterval(function() {
+            x -= 2.5;
+            if(x <= -400){
+                clearInterval(t);
+                x = -400;
+            }
+            $('.imgList').css({left:x});
+
+        },16)
+    };
+    changeImage();
+</script>
+</body>
+</html>
