@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Title</title>
   <style>
-    .div{
+    .div {
       width: 500px;
       height: 300px;
       border: 1px solid #ddd;
@@ -15,15 +15,21 @@
 <div class="div"></div>
 <script src="jquery.min.js"></script>
 <script>
-  ;(function ($,window,document,undefined) {
-    var Move = function (el,options) {
+  ;
+  (function ($, window, document, undefined) {
+    var Move = function (el, options) {
       this.$el = el; // 绑定元素
       this.mousedown = false;
       this.x1 = 0;
+      this.y1 = 0;
       this.changeX1 = 0;
+      this.changeY1 = 0;
       this.init();
       this.onLeft = options.onLeft;
       this.onRight = options.onRight;
+      this.onTop = options.onTop;
+      this.onBottom = options.onBottom;
+      this.distance=options.distance;
     };
     Move.prototype = {
       constuctor: Move,
@@ -32,57 +38,84 @@
       },
       bind: function () {
         var me = this;
-        me.$el.on('mousedown',function () {
+        me.$el.on('mousedown', function () {
           me.mousedown = true;
           me.x1 = 0;
           me.changeX1 = 0;
-        }).on('mouseup',function () {
+          me.y1 = 0;
+          me.changeY1 = 0;
+
+        }).on('mouseup', function () {
           me.mousedown = false;
-        }).on('mouseout',function () {
+        }).on('mouseout', function () {
           me.mousedown = false;
-        }).on('mousemove',function (e) {
-          if(!me.mousedown) {
+        }).on('mousemove', function (e) {
+          if (!me.mousedown) {
             return;
           }
-          if(me.x1 === 0) {
+          if (me.x1 === 0) {
             me.x1 = parseInt(e.clientX);
           }
-          var willChange = parseInt((e.clientX - me.x1) / 30);   // 要改变
+          if (me.y1 === 0) {
+            me.y1 = parseInt(e.clientY);
+          }
+          var willChange = parseInt((e.clientX - me.x1) / me.distance);   // 要改变
 
-          if(willChange < me.changeX1) {  // 如果 要改变的 < 已改变的, 则向左转
+          var willChangeY = parseInt((e.clientY - me.y1) / me.distance);
+
+          if (willChange < me.changeX1) {  // 如果 要改变的 < 已改变的, 则向左转
 //            console.log('向左转');
             me.changeX1 = willChange;
             me.onLeft();
 
-          } else if(willChange > me.changeX1) {   // 如果 要改变的 > 已改变的, 则向右转
+          } else if (willChange > me.changeX1) {   // 如果 要改变的 > 已改变的, 则向右转
 //            console.log('向右转');
             me.changeX1 = willChange;
             me.onRight();
+          }
+//         上下移动
+          if (willChangeY < me.changeY1) {
+            me.changeY1 = willChangeY;
+            me.onTop();
+          } else if (willChangeY > me.changeY1) {
+            me.changeY1 = willChangeY;
+            me.onBottom();
           }
 
         });
       }
     };
 
-    $.fn.Move = function(options) {
-      var noop = function () {};
-      var defaultOptions = {
-        onLeft: noop,
-        onRight: noop
+    $.fn.Move = function (options) {
+      var noop = function () {
       };
-      options = $.extend({},defaultOptions,options);
-      return this.each(function() {
-        new Move($(this),options);
+      var defaultOptions = {
+        distance:30,
+        onLeft: noop,
+        onRight: noop,
+        onTop:noop,
+        onBottom:noop
+      };
+      options = $.extend({}, defaultOptions, options);
+      return this.each(function () {
+        new Move($(this), options);
       });
     }
 
-  })(jQuery,window,document);
+  })(jQuery, window, document);
+
   $('.div').Move({
     onLeft: function () {
       console.log('move left');
     },
     onRight: function () {
       console.log('move right');
+    },
+    onTop:function () {
+      console.log('move top')
+    },
+    onBottom:function () {
+      console.log('move bottom')
     }
   });
 </script>
