@@ -29,7 +29,7 @@
       this.onRight = options.onRight;
       this.onTop = options.onTop;
       this.onBottom = options.onBottom;
-      this.distance=options.distance;
+      this.distance = options.distance;
     };
     Move.prototype = {
       constuctor: Move,
@@ -47,6 +47,10 @@
 
         }).on('mouseup', function () {
           me.mousedown = false;
+          /* me.x1=me.$el.offset();
+           me.y1=me.$el.offset();
+           console.log(me.x1);*/
+
         }).on('mouseout', function () {
           me.mousedown = false;
         }).on('mousemove', function (e) {
@@ -63,25 +67,27 @@
 
           var willChangeY = parseInt((e.clientY - me.y1) / me.distance);
 
-          if (willChange < me.changeX1) {  // 如果 要改变的 < 已改变的, 则向左转
-//            console.log('向左转');
+          if (willChange < me.changeX1 && (me.changeY1 === 0 || me.changeY1 < me.changeX1)) {  // 如果 要改变的 < 已改变的, 则向左转
+            // y轴方向移动为0 或者y轴方向移动小于x轴
             me.changeX1 = willChange;
             me.onLeft();
+            return;
 
-          } else if (willChange > me.changeX1) {   // 如果 要改变的 > 已改变的, 则向右转
-//            console.log('向右转');
+          } else if (willChange > me.changeX1 && (me.changeY1 === 0 || me.changeY1 < me.changeX1)) {   // 如果 要改变的 > 已改变的, 则向右转
+
             me.changeX1 = willChange;
             me.onRight();
-          }
-//         上下移动
-          if (willChangeY < me.changeY1) {
+            return;
+
+          } else if (willChangeY < me.changeY1 && (me.changeX1 === 0 || me.changeX1 < me.changeY1)) {
             me.changeY1 = willChangeY;
             me.onTop();
-          } else if (willChangeY > me.changeY1) {
+            return;
+          } else if (willChangeY > me.changeY1 && (me.changeX1 === 0 || me.changeX1 < me.changeY1)) {
             me.changeY1 = willChangeY;
             me.onBottom();
+            return;
           }
-
         });
       }
     };
@@ -90,11 +96,11 @@
       var noop = function () {
       };
       var defaultOptions = {
-        distance:30,
+        distance: 30,
         onLeft: noop,
         onRight: noop,
-        onTop:noop,
-        onBottom:noop
+        onTop: noop,
+        onBottom: noop
       };
       options = $.extend({}, defaultOptions, options);
       return this.each(function () {
@@ -111,10 +117,10 @@
     onRight: function () {
       console.log('move right');
     },
-    onTop:function () {
+    onTop: function () {
       console.log('move top')
     },
-    onBottom:function () {
+    onBottom: function () {
       console.log('move bottom')
     }
   });
