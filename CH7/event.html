@@ -67,24 +67,25 @@
 
           var willChangeY = parseInt((e.clientY - me.y1) / me.distance);
 
-          if (willChange < me.changeX1 && (me.changeY1 === 0 || me.changeY1 < me.changeX1)) {  // 如果 要改变的 < 已改变的, 则向左转
+
+          if (willChange < me.changeX1 && (me.changeY1 === 0 || Math.abs(me.changeY1) < Math.abs(me.changeX1))) {  // 如果 要改变的 < 已改变的, 则向左转
             // y轴方向移动为0 或者y轴方向移动小于x轴
             me.changeX1 = willChange;
             me.onLeft();
             return;
 
-          } else if (willChange > me.changeX1 && (me.changeY1 === 0 || me.changeY1 < me.changeX1)) {   // 如果 要改变的 > 已改变的, 则向右转
+          } else if (willChange > me.changeX1 && (me.changeY1 === 0 || Math.abs(me.changeY1) < Math.abs(me.changeX1))) {   // 如果 要改变的 > 已改变的, 则向右转
 
             me.changeX1 = willChange;
             me.onRight();
             return;
 
           }
-          if (willChangeY < me.changeY1 && (me.changeX1 === 0 || me.changeX1 < me.changeY1)) {
+          if (willChangeY < me.changeY1 && (me.changeX1 === 0 || Math.abs(me.changeX1) < Math.abs(me.changeY1))) {
             me.changeY1 = willChangeY;
             me.onTop();
             return;
-          } else if (willChangeY > me.changeY1 && (me.changeX1 === 0 || me.changeX1 < me.changeY1)) {
+          } else if (willChangeY > me.changeY1 && (me.changeX1 === 0 || Math.abs(me.changeX1) < Math.abs(me.changeY1))) {
             me.changeY1 = willChangeY;
             me.onBottom();
             return;
