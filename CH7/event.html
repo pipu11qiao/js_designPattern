@@ -79,7 +79,8 @@
             me.onRight();
             return;
 
-          } else if (willChangeY < me.changeY1 && (me.changeX1 === 0 || me.changeX1 < me.changeY1)) {
+          }
+          if (willChangeY < me.changeY1 && (me.changeX1 === 0 || me.changeX1 < me.changeY1)) {
             me.changeY1 = willChangeY;
             me.onTop();
             return;
