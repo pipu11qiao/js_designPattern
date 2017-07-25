@@ -20,16 +20,12 @@
         var Move = function (el, options) {
             this.$el = el; // 绑定元素
             this.mousedown = false;
-            this.x = 0; // 当前
-            this.preX = 0;
-            this.y = 0;
-            this.preY = 0;
-
+            this.x = 0; // 初始 x
+            this.preX = 0; // 中间 x
+            this.y = 0; // 初始 y
+            this.preY = 0; // 中间 y
+            this.options = options;
             this.init();
-            this.onLeft = options.onLeft;
-            this.onRight = options.onRight;
-            this.onTop = options.onTop;
-            this.onBottom = options.onBottom;
         };
         Move.prototype = {
             constuctor: Move,
@@ -38,7 +34,7 @@
             },
             bind: function () {
                 var me = this;
-                me.$el.on('mousedown', function () {
+                me.$el.on('mousedown', function (e) {
                     me.mousedown = true;
                     me.x = parseInt(e.clientX); //
                     me.preX = parseInt(e.clientX);
@@ -52,17 +48,40 @@
                     if (!me.mousedown) {
                         return;
                     }
-                    var willChange = parseInt((e.clientX - me.x) / 30);   // 要改变
+                    var delX,delY; // x的变化量 y的变化量
+                    var type; // 事件类型
+                    delX = e.clientX - me.preX;
+                    delY = e.clientY - me.preY;
+                    // 判断是左右还是上下
+                    if (Math.abs(delX) > me.options.distance || Math.abs(delY) > me.options.distance) {
+                        if (Math.abs(delX) > Math.abs(delY)) {
+                            // 左右
+                            if (delX < 0) {
+                                // 向左
+                                type = 'onLeft';
+                            } else {
+                                // 向右
+                                type = 'onRight';
+                            }
 
-                    if (willChange < me.preX) {  // 如果 要改变的 < 已改变的, 则向左转
-//            console.log('向左转');
-                        me.preX = willChange;
-                        me.onLeft();
 
-                    } else if (willChange > me.preX) {   // 如果 要改变的 > 已改变的, 则向右转
-//            console.log('向右转');
-                        me.preX = willChange;
-                        me.onRight();
+                        } else {
+                            // 上下
+                            if (delY < 0) {
+                                // 上
+                                type = 'onTop';
+                            } else {
+                                // 下
+                                type = 'onBottom';
+                            }
+                        }
+                        me.preX = e.clientX;
+                        me.preY = e.clientY;
+                        // 输出移动的距离 ？？ 这个好像没啥用
+                        me.options[type]({
+                            x: me.preX -me.x,
+                            y: me.preY - me.y
+                        })
                     }
 
                 });
@@ -73,6 +92,7 @@
             var noop = function () {
             };
             var defaultOptions = {
+                distance: 30,
                 onLeft: noop,
                 onRight: noop,
                 onTop: noop,
@@ -86,16 +106,20 @@
 
     })(jQuery, window, document);
     $('.div').Move({
-        onLeft: function () {
+        onLeft: function (data) {
+            console.log(data);
             console.log('move left');
         },
-        onRight: function () {
+        onRight: function (data) {
+            console.log(data);
             console.log('move right');
         },
-        onTop: function () {
+        onTop: function (data) {
+            console.log(data);
             console.log('move top');
         },
-        onBottom: function () {
+        onBottom: function (data) {
+            console.log(data);
             console.log('move bottom');
         }
     });
