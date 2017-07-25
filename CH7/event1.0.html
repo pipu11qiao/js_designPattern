@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .div {
+            width: 500px;
+            height: 300px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+<div class="div"></div>
+<script src="jquery.min.js"></script>
+<script>
+    ;
+    (function ($, window, document, undefined) {
+        var Move = function (el, options) {
+            this.$el = el; // 绑定元素
+            this.mousedown = false;
+            this.x = 0; // 当前
+            this.preX = 0;
+            this.y = 0;
+            this.preY = 0;
+
+            this.init();
+            this.onLeft = options.onLeft;
+            this.onRight = options.onRight;
+            this.onTop = options.onTop;
+            this.onBottom = options.onBottom;
+        };
+        Move.prototype = {
+            constuctor: Move,
+            init: function () {
+                this.bind();
+            },
+            bind: function () {
+                var me = this;
+                me.$el.on('mousedown', function () {
+                    me.mousedown = true;
+                    me.x = parseInt(e.clientX); //
+                    me.preX = parseInt(e.clientX);
+                    me.y1 = parseInt(e.clientY);
+                    me.preY = parseInt(e.clientY);
+                }).on('mouseup', function () {
+                    me.mousedown = false;
+                }).on('mouseout', function () {
+                    me.mousedown = false;
+                }).on('mousemove', function (e) {
+                    if (!me.mousedown) {
+                        return;
+                    }
+                    var willChange = parseInt((e.clientX - me.x) / 30);   // 要改变
+
+                    if (willChange < me.preX) {  // 如果 要改变的 < 已改变的, 则向左转
+//            console.log('向左转');
+                        me.preX = willChange;
+                        me.onLeft();
+
+                    } else if (willChange > me.preX) {   // 如果 要改变的 > 已改变的, 则向右转
+//            console.log('向右转');
+                        me.preX = willChange;
+                        me.onRight();
+                    }
+
+                });
+            }
+        };
+
+        $.fn.Move = function (options) {
+            var noop = function () {
+            };
+            var defaultOptions = {
+                onLeft: noop,
+                onRight: noop,
+                onTop: noop,
+                onBottom: noop
+            };
+            options = $.extend({}, defaultOptions, options);
+            return this.each(function () {
+                new Move($(this), options);
+            });
+        }
+
+    })(jQuery, window, document);
+    $('.div').Move({
+        onLeft: function () {
+            console.log('move left');
+        },
+        onRight: function () {
+            console.log('move right');
+        },
+        onTop: function () {
+            console.log('move top');
+        },
+        onBottom: function () {
+            console.log('move bottom');
+        }
+    });
+</script>
+</body>
+</html>
