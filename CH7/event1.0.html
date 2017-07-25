@@ -38,7 +38,7 @@
                     me.mousedown = true;
                     me.x = parseInt(e.clientX); //
                     me.preX = parseInt(e.clientX);
-                    me.y1 = parseInt(e.clientY);
+                    me.y = parseInt(e.clientY);
                     me.preY = parseInt(e.clientY);
                 }).on('mouseup', function () {
                     me.mousedown = false;
@@ -63,7 +63,6 @@
                                 // 向右
                                 type = 'onRight';
                             }
-
 
                         } else {
                             // 上下
