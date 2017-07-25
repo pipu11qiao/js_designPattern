@@ -24,6 +24,8 @@
       this.y1 = 0;
       this.changeX1 = 0;
       this.changeY1 = 0;
+      this.mx=0;
+      this.my=0;
       this.init();
       this.onLeft = options.onLeft;
       this.onRight = options.onRight;
@@ -45,11 +47,12 @@
           me.y1 = 0;
           me.changeY1 = 0;
 
-        }).on('mouseup', function () {
+        }).on('mouseup', function (e) {
           me.mousedown = false;
-          /* me.x1=me.$el.offset();
-           me.y1=me.$el.offset();
-           console.log(me.x1);*/
+          me.mx=e.clientX-me.changeX1+me.x1;
+          me.my=e.clienty-me.changeY1+me.y1;
+          console.log(me.mx);
+          console.log(me.my);
 
         }).on('mouseout', function () {
           me.mousedown = false;
